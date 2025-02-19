@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>File manager</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      .main-app-loader-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+      .main-app-loader {
+          width: 50px;
+          height: 50px;
+          border: 5px solid rgb(25, 118, 210);
+          border-top: 5px solid transparent;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+      }
+  </style>
+  </head>
+  <body>
+    <div class="main-app-loader-wrapper">
+      <div class="main-app-loader"></div>
+    </div>
+  </body>
+</html>
