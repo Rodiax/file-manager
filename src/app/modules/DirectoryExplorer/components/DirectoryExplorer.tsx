@@ -9,7 +9,7 @@ import {
 } from '../../../shared/store/files';
 import { useWindowStore } from '../../../shared/store/window';
 import { FilePath } from '../../../shared/types/files';
-import Table from '../../../shared/ui/Table';
+import SearchableTable from '../../../shared/ui/SearchableTable';
 import { getFolderNameFromPath } from '../../../shared/utils/files';
 import { truncatePathFromLeft } from '../../../shared/utils/files';
 import RefreshButton from '../../../shared/ui/RefreshButton';
@@ -119,7 +119,7 @@ export default function DirectoryExplorer() {
       spacing={2}
       sx={{ height: '100%', paddingTop: 2 }}
     >
-      <Table
+      <SearchableTable
         renderCell={(row) =>
           renderCell(getFolderNameFromPath(userDirectoryPath))(row)
         }
@@ -139,7 +139,7 @@ export default function DirectoryExplorer() {
         sx={{ maxHeight: '48vh', height: '100%' }}
         isLoading={userTableIsLoding}
       />
-      <Table
+      <SearchableTable
         renderCell={(row) =>
           renderCell(getFolderNameFromPath(appDirectoryPath))(row)
         }
