@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Stack, Button, Breadcrumbs, Typography } from '@mui/material';
+import {
+  Stack,
+  Button,
+  Breadcrumbs,
+  Typography,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import { Search as SearchIcon, Close as CloseIcon } from '@mui/icons-material';
 import {
   useAppDirectoryStore,
   useUserDirectoryStore,
@@ -40,6 +49,15 @@ export default function DirectoryExplorer() {
 
   const [userTableIsLoding, setUserTableIsLoding] = useState(false);
   const [appTableIsLoding, setAppTableIsLoding] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [appSearch, setAppSearch] = useState('');
+
+  const filteredUserFilePaths = userFilePaths.filter((file) =>
+    file.path.toLowerCase().includes(userSearch.toLowerCase())
+  );
+  const filteredAppRootDirectories = appRootDirectories.filter((dir) =>
+    dir.path.toLowerCase().includes(appSearch.toLowerCase())
+  );
 
   const renderCell = (folderName: string) => (row: FilePath) =>
     (
@@ -119,46 +137,94 @@ export default function DirectoryExplorer() {
       spacing={2}
       sx={{ height: '100%', paddingTop: 2 }}
     >
-      <Table
-        renderCell={(row) =>
-          renderCell(getFolderNameFromPath(userDirectoryPath))(row)
-        }
-        data={userFilePaths}
-        title="Soubory"
-        title2={renderTitle2(getFolderNameFromPath(userDirectoryPath))}
-        afterTitle={renderRefreshFiles()}
-        onRemove={async (files: FilePath['id'][]) => {
-          setUserTableIsLoding(true);
-          removeUserDirectoryFilePaths(files);
+      <Stack spacing={1}>
+        <TextField
+          value={userSearch}
+          onChange={(e) => setUserSearch(e.target.value)}
+          placeholder="Hledat"
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              userSearch && (
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={() => setUserSearch('')}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              )
+            ),
+          }}
+        />
+        <Table
+          renderCell={(row) =>
+            renderCell(getFolderNameFromPath(userDirectoryPath))(row)
+          }
+          data={filteredUserFilePaths}
+          title="Soubory"
+          title2={renderTitle2(getFolderNameFromPath(userDirectoryPath))}
+          afterTitle={renderRefreshFiles()}
+          onRemove={async (files: FilePath['id'][]) => {
+            setUserTableIsLoding(true);
+            removeUserDirectoryFilePaths(files);
 
-          const newFiles = await getNewFilePaths();
-          setNewFilePaths(newFiles);
+            const newFiles = await getNewFilePaths();
+            setNewFilePaths(newFiles);
 
-          setUserTableIsLoding(false);
-        }}
-        sx={{ maxHeight: '48vh', height: '100%' }}
-        isLoading={userTableIsLoding}
-      />
-      <Table
-        renderCell={(row) =>
-          renderCell(getFolderNameFromPath(appDirectoryPath))(row)
-        }
-        data={appRootDirectories}
-        title="Aplikace"
-        title2={renderTitle2(getFolderNameFromPath(appDirectoryPath))}
-        afterTitle={renderRefreshApps()}
-        onRemove={async (files: FilePath['id'][]) => {
-          setAppTableIsLoding(true);
-          removeAppRootDirectories(files);
+            setUserTableIsLoding(false);
+          }}
+          sx={{ maxHeight: '48vh', height: '100%' }}
+          isLoading={userTableIsLoding}
+        />
+      </Stack>
+      <Stack spacing={1}>
+        <TextField
+          value={appSearch}
+          onChange={(e) => setAppSearch(e.target.value)}
+          placeholder="Hledat"
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              appSearch && (
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={() => setAppSearch('')}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              )
+            ),
+          }}
+        />
+        <Table
+          renderCell={(row) =>
+            renderCell(getFolderNameFromPath(appDirectoryPath))(row)
+          }
+          data={filteredAppRootDirectories}
+          title="Aplikace"
+          title2={renderTitle2(getFolderNameFromPath(appDirectoryPath))}
+          afterTitle={renderRefreshApps()}
+          onRemove={async (files: FilePath['id'][]) => {
+            setAppTableIsLoding(true);
+            removeAppRootDirectories(files);
 
-          const newFiles = await getNewFilePaths();
-          setNewFilePaths(newFiles);
+            const newFiles = await getNewFilePaths();
+            setNewFilePaths(newFiles);
 
-          setAppTableIsLoding(false);
-        }}
-        sx={{ maxHeight: '48vh', height: '100%' }}
-        isLoading={appTableIsLoding}
-      />
+            setAppTableIsLoding(false);
+          }}
+          sx={{ maxHeight: '48vh', height: '100%' }}
+          isLoading={appTableIsLoding}
+        />
+      </Stack>
       <Stack
         direction="row"
         justifyContent="space-between"
