@@ -212,7 +212,7 @@ function TableHead({
             checked={checked}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              'aria-label': 'select all rows',
             }}
           />
         </TableCell>
