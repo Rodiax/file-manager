@@ -139,7 +139,7 @@ export const getNewFilePaths = async () => {
     }
   }
 
-  newFilePaths.sort();
+  newFilePaths.sort((a, b) => a.newPath.localeCompare(b.newPath));
 
   return newFilePaths;
 };
